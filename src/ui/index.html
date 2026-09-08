@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RFQ Visibility</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark">RF</div>
+          <div>
+            <div class="brand-name">RFQ Visibility</div>
+            <div class="brand-subtitle">Procurement read model</div>
+          </div>
+        </div>
+        <nav class="primary-nav" aria-label="Primary">
+          <button class="nav-link active" data-view="overview">Overview</button>
+          <button class="nav-link" data-view="search">Search requests</button>
+          <button class="nav-link" data-view="clients">Clients</button>
+          <button class="nav-link" data-view="changes">Changes</button>
+        </nav>
+        <div class="topbar-actions">
+          <span class="readonly-pill"><span class="dot"></span> Read-only source</span>
+          <button class="button button-primary" id="sync-button">Sync now</button>
+        </div>
+      </header>
+
+      <main class="page-wrap">
+        <div id="app-notice" class="notice" hidden></div>
+
+        <section class="view active" data-section="overview">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Operations control tower</p>
+              <h1>Know what is happening with every request.</h1>
+              <p class="lede">A dependable view over the Procurement Tracker, with a direct path back to the source row whenever evidence matters.</p>
+            </div>
+            <div class="sync-summary">
+              <span class="sync-label">Last synchronized</span>
+              <strong id="last-synced">Not synchronized</strong>
+              <span id="source-summary">Demo fixture</span>
+            </div>
+          </div>
+
+          <div class="metric-grid" id="metric-grid"></div>
+
+          <div class="overview-grid">
+            <section class="panel panel-large">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Find the signal</p>
+                  <h2>Search requests</h2>
+                </div>
+                <button class="text-button" data-view="search">Open full search <span>→</span></button>
+              </div>
+              <form id="quick-search" class="quick-search">
+                <label class="search-field">
+                  <span class="search-icon">⌕</span>
+                  <input name="q" placeholder="Search quote, client, item, supplier, owner or source row" autocomplete="off">
+                </label>
+                <button class="button button-primary" type="submit">Search</button>
+              </form>
+              <div id="recent-results" class="result-stack"></div>
+            </section>
+
+            <section class="panel exception-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Needs attention</p>
+                  <h2>Exceptions</h2>
+                </div>
+                <button class="text-button" id="open-exceptions">View all <span>→</span></button>
+              </div>
+              <div id="exception-list" class="exception-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" data-section="search">
+          <div class="page-heading compact-heading">
+            <div>
+              <p class="eyebrow">Request directory</p>
+              <h1>Search and inspect RFQs</h1>
+              <p class="lede">Filter the synchronized snapshot. Every row stays tied to its physical source row.</p>
+            </div>
+          </div>
+          <section class="panel search-panel">
+            <form id="search-form" class="filter-form">
+              <label class="search-field wide-field"><span class="search-icon">⌕</span><input name="q" placeholder="Quote, client, item, supplier, owner or source row"></label>
+              <label>Client<input name="client" placeholder="Any client"></label>
+              <label>Supplier<input name="supplier" placeholder="Any supplier"></label>
+              <label>Operational bucket<select name="operationalStatus"><option value="">All statuses</option><option value="sourcing">Sourcing</option><option value="blocked">Blocked</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="cancelled">Cancelled</option><option value="active">Active</option></select></label>
+              <label>CS / BD owner<input name="owner" placeholder="Any owner"></label>
+              <label>Procurement owner<input name="procurementOwner" placeholder="Any owner"></label>
+              <div class="filter-checks">
+                <label class="check-label"><input type="checkbox" name="active"> Active only</label>
+                <label class="check-label"><input type="checkbox" name="stale"> Stale only</label>
+                <label class="check-label"><input type="checkbox" name="exception"> Exceptions only</label>
+              </div>
+              <div class="filter-actions"><button class="button button-primary" type="submit">Apply filters</button><button class="button button-quiet" id="clear-filters" type="button">Clear</button></div>
+            </form>
+            <div class="results-toolbar"><span id="result-count">0 requests</span><label class="check-label"><input type="checkbox" id="grouped-toggle"> Group related rows</label></div>
+            <div id="search-results" class="result-stack"></div>
+          </section>
+        </section>
+
+        <section class="view" data-section="clients">
+          <div class="page-heading compact-heading"><div><p class="eyebrow">Client workspace</p><h1>Requests by client</h1><p class="lede">A client-oriented view without losing the request-level evidence underneath.</p></div></div>
+          <section class="panel"><div id="client-list" class="client-grid"></div></section>
+        </section>
+
+        <section class="view" data-section="changes">
+          <div class="page-heading compact-heading"><div><p class="eyebrow">Synchronization history</p><h1>What changed</h1><p class="lede">New and changed source rows observed during the latest successful synchronization.</p></div></div>
+          <section class="panel"><div id="change-list" class="change-list"></div></section>
+        </section>
+
+        <aside class="detail-drawer" id="detail-drawer" aria-hidden="true">
+          <div class="drawer-backdrop" id="drawer-backdrop"></div>
+          <div class="drawer-content">
+            <div class="drawer-header"><div><p class="eyebrow">Request detail</p><h2 id="detail-title">Request</h2></div><button class="close-button" id="close-drawer" aria-label="Close detail">×</button></div>
+            <div id="detail-body"></div>
+          </div>
+        </aside>
+      </main>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
